@@ -2,11 +2,12 @@ import {useState} from "react";
 
 const recognition = new window.webkitSpeechRecognition();
 
-recognition.continuous = false;
+recognition.continuous = true;
 recognition.lang = "en-US";
 
 function App() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [buffer, setBuffer] = useState<string>("");
 
   const handleStartRecording = () => {
     setIsRecording(true);
@@ -14,12 +15,12 @@ function App() {
     recognition.start();
 
     recognition.addEventListener("result", (event) => {
-      const transcript = Array.from(event.results)
+      const buffer = Array.from(event.results)
         .map((result) => result[0])
         .map((result) => result.transcript)
-        .join("");
+        .join(" ");
 
-      console.log(transcript);
+      setBuffer(buffer);
     });
   };
   const handleEndRecording = () => {
