@@ -1,2 +1,2 @@
 # AI-Interviewer
-AI drive interviewer App to help you get that dream job!
+AI driven interviewer App to help you get that dream job!

@@ -1,10 +1,16 @@
+import {useState} from "react";
+
 function App() {
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+
   return (
     <main className="container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] px-4">
-      <header className="text-xl font-bold leading-[4rem]">EntrevistAIdor</header>
-      <section className="py-8">👋</section>
+      <header className="text-xl font-bold leading-[4rem]">AI-Interviewer</header>
+      <section className="grid place-content-center py-8">
+        <button className="h-64 w-64 rounded-full border-4 border-neutral-700 bg-red-500" />
+      </section>
       <footer className="text-center leading-[4rem] opacity-70">
-        © {new Date().getFullYear()} EntrevistAIdor
+        © {new Date().getFullYear()} AI-Interviewer
       </footer>
     </main>
   );
