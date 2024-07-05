@@ -8,6 +8,18 @@ recognition.lang = "en-US";
 function App() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [buffer, setBuffer] = useState<string>("");
+  const [messages, setMessages] = useState<
+    {
+      role: "user" | "system" | "assistant";
+      content: string;
+    }[]
+  >([
+    {
+      role: "system",
+      content:
+        "You are an IT interviewer evaluating candidates for a junior web developer position. Your tone should be professional and friendly.",
+    },
+  ]);
 
   const handleStartRecording = () => {
     setIsRecording(true);
@@ -23,9 +35,32 @@ function App() {
       setBuffer(buffer);
     });
   };
-  const handleEndRecording = () => {
+
+  const handleEndRecording = async () => {
     setIsRecording(false);
     recognition.stop();
+
+    const draft = structuredClone(messages);
+
+    draft.push({
+      role: "user",
+      content: buffer,
+    });
+
+    const answer = await fetch("http://localhost:11434/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        model: "llama3",
+        stream: false,
+        messages: draft,
+      }),
+    })
+      .then(
+        (response) => response.json() as Promise<{message: {role: "assistant"; content: string}}>,
+      )
+      .then((response) => response.message);
+
+    console.log(answer.content);
   };
 
   return (
