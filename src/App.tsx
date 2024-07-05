@@ -60,7 +60,9 @@ function App() {
       )
       .then((response) => response.message);
 
-    console.log(answer.content);
+    draft.push(answer);
+
+    setMessages(draft);
   };
 
   return (
