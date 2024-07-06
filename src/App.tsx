@@ -1,6 +1,7 @@
 import {useState} from "react";
 
 const recognition = new window.webkitSpeechRecognition();
+const synth = window.speechSynthesis;
 
 recognition.continuous = true;
 recognition.lang = "en-US";
@@ -61,6 +62,10 @@ function App() {
       .then((response) => response.message);
 
     draft.push(answer);
+
+    const utterance = new SpeechSynthesisUtterance(answer.content);
+
+    synth.speak(utterance);
 
     setMessages(draft);
   };
