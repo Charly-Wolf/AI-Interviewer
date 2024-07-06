@@ -6,6 +6,8 @@ const synth = window.speechSynthesis;
 recognition.continuous = true;
 recognition.lang = "en-US";
 
+synth.cancel(); // Cancel when refreshing the page
+
 function App() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [buffer, setBuffer] = useState<string>("");
@@ -25,6 +27,7 @@ function App() {
   const handleStartRecording = () => {
     setIsRecording(true);
 
+    synth.cancel(); // Interrupt voice synthesis if the user wants to record a new message
     recognition.start();
 
     recognition.addEventListener("result", (event) => {
@@ -64,6 +67,8 @@ function App() {
     draft.push(answer);
 
     const utterance = new SpeechSynthesisUtterance(answer.content);
+
+    utterance.lang = "en-US";
 
     synth.speak(utterance);
 
