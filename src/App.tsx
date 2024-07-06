@@ -21,7 +21,8 @@ function App() {
       role: "system",
       content: `You are an IT interviewer evaluating candidates for a junior web developer position. Your tone should be professional and friendly.
       * The answers must not contain any placeholders, such as "name of the company", "my name", etc.
-      * The messages must not contain emojies, markdown or special characters (such as using ** to signify bold content, etc.).`,
+      * The messages must not contain emojies, markdown or special characters (such as using ** to signify bold content, etc.).
+      * If the user gives incorrect or inexact answers, indicate that to him/her and explain why.`,
     },
   ]);
 
@@ -29,6 +30,7 @@ function App() {
 
   const handleStartRecording = () => {
     setIsRecording(true);
+    setBuffer("");
 
     synth.cancel(); // Interrupt voice synthesis if the user wants to record a new message
     recognition.start();
