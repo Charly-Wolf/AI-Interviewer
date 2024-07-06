@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useRef, useState} from "react";
 
 const recognition = new window.webkitSpeechRecognition();
 const synth = window.speechSynthesis;
@@ -25,25 +25,36 @@ function App() {
     },
   ]);
 
+  const recordController = useRef(new AbortController());
+
   const handleStartRecording = () => {
     setIsRecording(true);
 
     synth.cancel(); // Interrupt voice synthesis if the user wants to record a new message
     recognition.start();
 
-    recognition.addEventListener("result", (event) => {
-      const buffer = Array.from(event.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join(" ");
+    recognition.addEventListener(
+      "result",
+      (event) => {
+        const buffer = Array.from(event.results)
+          .map((result) => result[0])
+          .map((result) => result.transcript)
+          .join(" ");
 
-      setBuffer(buffer);
-    });
+        setBuffer(buffer);
+      },
+      {
+        signal: recordController.current.signal,
+      },
+    );
   };
 
   const handleEndRecording = async () => {
     setIsRecording(false);
+
     recognition.stop();
+    recordController.current.abort();
+    recordController.current = new AbortController();
 
     const draft = structuredClone(messages);
 
